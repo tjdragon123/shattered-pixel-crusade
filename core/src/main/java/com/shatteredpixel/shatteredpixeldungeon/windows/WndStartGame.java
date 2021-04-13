@@ -317,6 +317,11 @@ public class WndStartGame extends Window {
 							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, null));
 							heroMisc.icon(new ItemSprite(ItemSpriteSheet.RATION, null));
 							break;
+						case PALADIN:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.SEAL, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, null));
+							heroMisc.icon(new ItemSprite(ItemSpriteSheet.RATION, null));
+							break;
 						case MAGE:
 							heroItem.icon(new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null));
 							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.HOLDER, null));

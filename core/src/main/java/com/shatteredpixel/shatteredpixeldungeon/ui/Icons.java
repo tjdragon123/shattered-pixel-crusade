@@ -61,6 +61,7 @@ public enum Icons {
 	//hero & rankings icons
 	DEPTH,
 	WARRIOR,
+	PALADIN,
 	MAGE,
 	ROGUE,
 	HUNTRESS,
@@ -178,6 +179,9 @@ public enum Icons {
 		case WARRIOR:
 			icon.frame( icon.texture.uvRect( 16, 48, 25, 63 ) );
 			break;
+		case PALADIN:
+			icon.frame( icon.texture.uvRect( 16, 48, 25, 63 ) );
+			break;
 		case MAGE:
 			icon.frame( icon.texture.uvRect( 32, 48, 47, 62 ) );
 			break;
@@ -250,6 +254,8 @@ public enum Icons {
 		switch (cl) {
 		case WARRIOR:
 			return get( WARRIOR );
+		case PALADIN:
+			return get( PALADIN );
 		case MAGE:
 			return get( MAGE );
 		case ROGUE:

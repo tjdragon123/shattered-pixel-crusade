@@ -63,6 +63,8 @@ abstract public class ClassArmor extends Armor {
 				classArmor.affixSeal(seal);
 			}
 			break;
+		case PALADIN:
+			classArmor = new RogueArmor();
 		case ROGUE:
 			classArmor = new RogueArmor();
 			break;

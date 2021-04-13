@@ -41,13 +41,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPrismaticLight;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Shortsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -57,9 +60,11 @@ import com.watabou.utils.DeviceCompat;
 public enum HeroClass {
 
 	WARRIOR( "warrior", HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR ),
+	PALADIN( "paladin", HeroSubClass.PALADIN1, HeroSubClass.PALADIN2),
 	MAGE( "mage", HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
 	ROGUE( "rogue", HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS( "huntress", HeroSubClass.SNIPER, HeroSubClass.WARDEN );
+
 
 	private String title;
 	private HeroSubClass[] subClasses;
@@ -79,6 +84,10 @@ public enum HeroClass {
 		switch (this) {
 			case WARRIOR:
 				initWarrior( hero );
+				break;
+
+			case PALADIN:
+				initPaladin( hero );
 				break;
 
 			case MAGE:
@@ -111,6 +120,8 @@ public enum HeroClass {
 		switch (this) {
 			case WARRIOR:
 				return Badges.Badge.MASTERY_WARRIOR;
+			case PALADIN:
+				return Badges.Badge.MASTERY_WARRIOR;
 			case MAGE:
 				return Badges.Badge.MASTERY_MAGE;
 			case ROGUE:
@@ -136,6 +147,21 @@ public enum HeroClass {
 
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();
+	}
+
+	private static void initPaladin( Hero hero ) {
+		(hero.belongings.weapon = new WornShortsword()).identify();
+		WandOfPrismaticLight exorciser = new WandOfPrismaticLight();
+		exorciser.collect();
+		exorciser.identify();
+		Dungeon.quickslot.setSlot(0, exorciser);
+
+
+		new PotionBandolier().collect();
+		Dungeon.LimitedDrops.POTION_BANDOLIER.drop();
+
+		new PotionOfHealing().identify();
+		new ScrollOfRemoveCurse().identify();
 	}
 
 	private static void initMage( Hero hero ) {
@@ -202,6 +228,8 @@ public enum HeroClass {
 		switch (this) {
 			case WARRIOR: default:
 				return Assets.Sprites.WARRIOR;
+			case PALADIN:
+				return Assets.Sprites.WARRIOR;
 			case MAGE:
 				return Assets.Sprites.MAGE;
 			case ROGUE:
@@ -215,6 +243,8 @@ public enum HeroClass {
 		switch (this) {
 			case WARRIOR: default:
 				return Assets.Splashes.WARRIOR;
+			case PALADIN:
+				return Assets.Splashes.WARRIOR;
 			case MAGE:
 				return Assets.Splashes.MAGE;
 			case ROGUE:
@@ -227,6 +257,14 @@ public enum HeroClass {
 	public String[] perks() {
 		switch (this) {
 			case WARRIOR: default:
+				return new String[]{
+						Messages.get(HeroClass.class, "warrior_perk1"),
+						Messages.get(HeroClass.class, "warrior_perk2"),
+						Messages.get(HeroClass.class, "warrior_perk3"),
+						Messages.get(HeroClass.class, "warrior_perk4"),
+						Messages.get(HeroClass.class, "warrior_perk5"),
+				};
+			case PALADIN:
 				return new String[]{
 						Messages.get(HeroClass.class, "warrior_perk1"),
 						Messages.get(HeroClass.class, "warrior_perk2"),
@@ -268,6 +306,8 @@ public enum HeroClass {
 		switch (this){
 			case WARRIOR: default:
 				return true;
+			case PALADIN:
+				return true;
 			case MAGE:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
 			case ROGUE:
@@ -280,6 +320,8 @@ public enum HeroClass {
 	public String unlockMsg() {
 		switch (this){
 			case WARRIOR: default:
+				return "";
+			case PALADIN:
 				return "";
 			case MAGE:
 				return Messages.get(HeroClass.class, "mage_unlock");

@@ -30,6 +30,9 @@ public enum HeroSubClass {
 	
 	GLADIATOR( "gladiator" ),
 	BERSERKER( "berserker" ),
+
+	PALADIN1( "paladin1" ),
+	PALADIN2( "paladin2" ),
 	
 	WARLOCK( "warlock" ),
 	BATTLEMAGE( "battlemage" ),

@@ -592,6 +592,9 @@ public class Badges {
 				case WARRIOR:
 					badge = Badge.BOSS_SLAIN_1_WARRIOR;
 					break;
+				case PALADIN:
+					badge = Badge.BOSS_SLAIN_1_WARRIOR;
+					break;
 				case MAGE:
 					badge = Badge.BOSS_SLAIN_1_MAGE;
 					break;
@@ -683,6 +686,9 @@ public class Badges {
 		case WARRIOR:
 			badge = Badge.MASTERY_WARRIOR;
 			break;
+		case PALADIN:
+			badge = Badge.MASTERY_WARRIOR;
+			break;
 		case MAGE:
 			badge = Badge.MASTERY_MAGE;
 			break;
@@ -733,6 +739,9 @@ public class Badges {
 
 		switch (Dungeon.hero.heroClass) {
 		case WARRIOR:
+			badge = Badge.VICTORY_WARRIOR;
+			break;
+		case PALADIN:
 			badge = Badge.VICTORY_WARRIOR;
 			break;
 		case MAGE:

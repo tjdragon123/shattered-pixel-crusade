@@ -404,6 +404,12 @@ public class HeroSelectScene extends PixelScene {
 							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, null)
 					};
 					break;
+				case PALADIN:
+					tabIcons = new Image[]{
+							new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null),
+							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, null)
+					};
+					break;
 				case MAGE:
 					tabIcons = new Image[]{
 							new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null),
