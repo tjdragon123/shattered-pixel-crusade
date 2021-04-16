@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolySymbol;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
@@ -153,10 +154,10 @@ public enum HeroClass {
 
 	private static void initPaladin( Hero hero ) {
 		(hero.belongings.weapon = new WornMace()).identify();
-		WandOfPrismaticLight exorciser = new WandOfPrismaticLight();
-		exorciser.collect();
-		exorciser.identify();
-		Dungeon.quickslot.setSlot(0, exorciser);
+		HolySymbol symbol = new HolySymbol();
+		(hero.belongings.artifact = symbol).identify();
+		hero.belongings.artifact.activate( hero );
+		Dungeon.quickslot.setSlot(0, symbol);
 
 
 		new ScrollHolder().collect();
