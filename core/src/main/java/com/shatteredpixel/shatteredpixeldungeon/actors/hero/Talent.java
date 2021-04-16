@@ -78,6 +78,9 @@ public enum Talent {
 	//Gladiator T3
 	CLEAVE(14, 3), LETHAL_DEFENSE(15, 3), ENHANCED_COMBO(16, 3),
 
+	//Paladin T1
+	DIVINE_INTUITION(97),
+
 	//Mage T1
 	EMPOWERING_MEAL(32), SCHOLARS_INTUITION(33), TESTED_HYPOTHESIS(34), BACKUP_BARRIER(35),
 	//Mage T2
@@ -160,6 +163,11 @@ public enum Talent {
 			if (hero.belongings.weapon != null) hero.belongings.weapon.identify();
 			if (hero.belongings.armor != null)  hero.belongings.armor.identify();
 		}
+		if (talent == DIVINE_INTUITION && hero.pointsInTalent(DIVINE_INTUITION) == 2){
+			for (Item item : Dungeon.hero.belongings){
+				item.cursedKnown = true;
+			}
+		}
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.identify();
 			if (hero.belongings.misc instanceof Ring) hero.belongings.misc.identify();
@@ -227,6 +235,10 @@ public enum Talent {
 	public static float itemIDSpeedFactor( Hero hero, Item item ){
 		// 1.75x/2.5x speed with huntress talent
 		float factor = 1f + hero.pointsInTalent(SURVIVALISTS_INTUITION)*0.75f;
+
+		if (hero.pointsInTalent(DIVINE_INTUITION) >= 1){
+			factor = 1.75f;
+		}
 
 		// 2x/instant for Warrior (see onItemEquipped)
 		if (item instanceof MeleeWeapon || item instanceof Armor){
@@ -330,6 +342,9 @@ public enum Talent {
 		if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (item instanceof Ring) ((Ring) item).setKnown();
 		}
+		if (hero.pointsInTalent(DIVINE_INTUITION) == 2){
+			item.cursedKnown = true;
+		}
 	}
 
 	//note that IDing can happen in alchemy scene, so be careful with VFX here
@@ -392,7 +407,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, HEARTY_MEAL, ARMSMASTERS_INTUITION, TEST_SUBJECT, IRON_WILL);
 				break;
 			case PALADIN:
-				Collections.addAll(tierTalents, HEARTY_MEAL, ARMSMASTERS_INTUITION, TEST_SUBJECT, IRON_WILL);
+				Collections.addAll(tierTalents, HEARTY_MEAL, DIVINE_INTUITION, TEST_SUBJECT, IRON_WILL);
 				break;
 			case MAGE:
 				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, TESTED_HYPOTHESIS, BACKUP_BARRIER);
