@@ -21,14 +21,28 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -39,16 +53,30 @@ public class HolySymbol extends Artifact{
         exp = 0;
         levelCap = 10;
 
-        charge = 3;
+        charge = Math.min(3 + level(), 10);
         partialCharge = 0;
-        chargeCap = 3;
+        chargeCap = Math.min(3 + level(), 10);
 
         defaultAction = AC_SMITE;
 
+        usesTargeting = true;
         unique = true;
         bones = false;
 
     }
+
+    public int min() {
+        return 4 + level();
+    }
+
+    public int max() {
+        return 10 + 4*level();
+    }
+
+    public int damageRoll() {
+        return Random.NormalIntRange(min(), max());
+    }
+
 
     public static final String AC_SMITE = "SMITE";
 
@@ -75,12 +103,72 @@ public class HolySymbol extends Artifact{
                 QuickSlotButton.cancel();
 
             } else {
-                //GameScene.selectCell(caster);
-                charge--;
-                updateQuickslot();
-                GLog.w("smiting to be implemented");
+                GameScene.selectCell(caster);
+
+
             }
         }
+    }
+
+    private CellSelector.Listener caster = new CellSelector.Listener(){
+
+        @Override
+        public void onSelect(Integer target) {
+            if (target != null ){
+
+                curUser.busy();
+                charge--;
+                updateQuickslot();
+
+
+                final Ballistica smite = new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT);
+                int cell = smite.collisionPos;
+
+                curUser.sprite.zap(cell);
+                curUser.sprite.parent.add(
+                        new Beam.LightRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(smite.collisionPos)));
+
+                Char ch = Actor.findChar(cell);
+
+                if (ch != null) {
+                    ch.damage(damageRoll(), this);
+                }
+
+                //target hero level is 1 + 2*symbol level
+                int lvlDiffFromTarget = (curUser).lvl - (1+level()*2);
+                //plus an extra one for each level after 6
+                if (level() >= 7){
+                    lvlDiffFromTarget -= level()-6;
+                }
+                if (lvlDiffFromTarget >= 0){
+                    exp += Math.round(10f * Math.pow(1.1f, lvlDiffFromTarget));
+                } else {
+                    exp += Math.round(10f * Math.pow(0.75f, -lvlDiffFromTarget));
+                }
+
+                if (exp >= (level() + 1) * 50 && level() < levelCap) {
+                    upgrade();
+                    exp -= level() * 50;
+                    GLog.p(Messages.get(HolySymbol.class, "levelup"));
+
+                }
+
+                curUser.spend(1f);
+                curUser.next();
+            }
+
+        }
+
+        @Override
+        public String prompt() {
+            return Messages.get(HolySymbol.class, "prompt");
+        }
+    };
+
+    @Override
+    public Item upgrade() {
+        chargeCap = Math.min(chargeCap+1, 10);
+        return super.upgrade();
     }
 
     @Override
